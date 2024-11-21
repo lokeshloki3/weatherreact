@@ -1,19 +1,19 @@
-import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { MyContext } from "../MyContext";
+// Weather.js
+import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { MyContext } from '../MyContext';
 
 const Weather = () => {
   const navigate = useNavigate();
   const [city, setCity] = useState("");
   const [cities, setCities] = useState([]);
-  const { text, setText } = useContext(MyContext);
+  const { text, setText, latitude, setLatitude, longitude, setLongitude } = useContext(MyContext);
 
   const handleSearch = async (newCity) => {
     if (!newCity) {
       setCities([]);
       return;
     }
-
     try {
       const response = await fetch(
         `https://geocoding-api.open-meteo.com/v1/search?name=${newCity}&count=15&language=en&format=json`
@@ -22,15 +22,17 @@ const Weather = () => {
       if (data.results) {
         setCities(data.results);
       } else {
-        setError("No cities found");
+        console.log("No cities found");
       }
-      // console.log(data);
     } catch (err) {
-      setError("Failed to fetch city data");
+      console.log("Failed to fetch city data");
     }
   };
 
-  const selectedCity = () => {
+  const selectedCity = (city) => {
+    setText(city.name);
+    setLatitude(city.latitude);
+    setLongitude(city.longitude);
     navigate("/cities");
   };
 
@@ -52,9 +54,12 @@ const Weather = () => {
           {cities.length ? (
             <div className="border mt-5 shadow-lg">
               {cities.map((city, index) => (
-                <div onClick={(e) => {selectedCity(city)
-                setText(city.name)}} key={index}>
-                  {city.name}, {city.country}
+                <div
+                  key={index}
+                  className="cursor-pointer hover:bg-gray-200"
+                  onClick={() => selectedCity(city)}
+                >
+                  {city.country_code}, {city.name}, {city.country}
                 </div>
               ))}
             </div>
@@ -62,10 +67,6 @@ const Weather = () => {
             ""
           )}
         </div>
-
-        {/* <button type="submit" className='bg-pink-100'>
-          Search
-        </button> */}
       </div>
     </div>
   );
