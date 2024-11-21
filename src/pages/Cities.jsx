@@ -4,9 +4,7 @@ import { MyContext } from "../MyContext";
 const Cities = () => {
   const { text, latitude, longitude } = useContext(MyContext);
   const [weatherData, setWeatherData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
+  
   useEffect(() => {
     if (latitude && longitude) {
       const fetchWeatherData = async () => {
