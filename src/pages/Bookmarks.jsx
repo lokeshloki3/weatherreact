@@ -1,14 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useMyContext } from "../MyContext";
 
 const Bookmarks = () => {
   const [bookmarks, setBookmarks] = useState([]);
+  const { setCountry, setLatitude, setLongitude, setText } = useMyContext(); // Destructure context values
 
   // Fetch bookmarks from localStorage
   useEffect(() => {
     const storedBookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
     setBookmarks(storedBookmarks);
   }, []);
+
+  // Handle bookmark click to set context values
+  const handleBookmarkClick = (bookmark) => {
+    setText(bookmark.city);
+    setCountry(bookmark.country);
+    setLatitude(bookmark.latitude);
+    setLongitude(bookmark.longitude);
+  };
 
   return (
     <div className="min-h-screen flex justify-center items-center">
@@ -20,8 +30,9 @@ const Bookmarks = () => {
             {bookmarks.map((bookmark, index) => (
               <div key={index} className="mb-4 p-4 border-b border-gray-300">
                 <Link
-                  to={`/cities/${bookmark.latitude}/${bookmark.longitude}`}
+                  to="/cities"
                   className="text-blue-500 hover:underline"
+                  onClick={() => handleBookmarkClick(bookmark)} // Set context when clicked
                 >
                   <h3 className="text-xl font-semibold">
                     {bookmark.city}, {bookmark.country}

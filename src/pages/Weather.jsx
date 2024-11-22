@@ -1,13 +1,18 @@
-// Weather.js
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MyContext } from '../MyContext';
 
 const Weather = () => {
   const navigate = useNavigate();
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState('');
   const [cities, setCities] = useState([]);
-  const { text, setText, latitude, setLatitude, longitude, setLongitude, country, setCountry } = useContext(MyContext);
+  const { setText, setCountry } = useContext(MyContext);
+
+  // Load saved cities localStorage
+  useEffect(() => {
+    const savedCities = JSON.parse(localStorage.getItem('savedCities')) || [];
+    // console.log(savedCities);
+  }, []);
 
   const handleSearch = async (newCity) => {
     if (!newCity) {
@@ -21,19 +26,15 @@ const Weather = () => {
       const data = await response.json();
       if (data.results) {
         setCities(data.results);
-      } else {
-        console.log("No cities found");
       }
     } catch (err) {
-      console.log("Failed to fetch city data");
+      console.log("Failed to fetch city data", err);
     }
   };
 
   const selectedCity = (city) => {
     setText(city.name);
     setCountry(city.country);
-    setLatitude(city.latitude);
-    setLongitude(city.longitude);
     navigate(`/cities/${city.latitude}/${city.longitude}`);
   };
 
@@ -52,7 +53,8 @@ const Weather = () => {
               handleSearch(e.target.value);
             }}
           />
-          {cities.length ? (
+          
+          {cities.length > 0 && (
             <div className="border mt-5 shadow-lg">
               {cities.map((city, index) => (
                 <div
@@ -64,8 +66,6 @@ const Weather = () => {
                 </div>
               ))}
             </div>
-          ) : (
-            ""
           )}
         </div>
       </div>

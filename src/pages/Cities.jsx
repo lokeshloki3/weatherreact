@@ -1,19 +1,16 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { MyContext } from "../MyContext";
 
 const Cities = () => {
-  const { text, country } = useContext(MyContext);
-  const { latitude, longitude } = useParams();
+  const { text, country, latitude, longitude } = useContext(MyContext); // Get data from context
   const [weatherData, setWeatherData] = useState(null);
 
   useEffect(() => {
     if (latitude && longitude) {
       const fetchWeatherData = async () => {
-        // setLoading(true);
         try {
           const response = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=13.6978&longitude=123.4892&current_weather=true`
+            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`
           );
           if (!response.ok) {
             throw new Error("Failed to fetch weather data");
@@ -21,9 +18,7 @@ const Cities = () => {
           const data = await response.json();
           setWeatherData(data);
         } catch (err) {
-          setError(err.message);
-        } finally {
-          // setLoading(false);
+          console.error(err.message);
         }
       };
 
@@ -40,14 +35,11 @@ const Cities = () => {
         longitude: longitude,
       };
 
-      // Get existing bookmarks from localStorage
       const existingBookmarks =
         JSON.parse(localStorage.getItem("bookmarks")) || [];
 
-      // Add the new bookmark to the existing bookmarks array
       existingBookmarks.push(bookmark);
 
-      // Save the updated array back to localStorage
       localStorage.setItem("bookmarks", JSON.stringify(existingBookmarks));
 
       alert("City added to bookmarks!");
