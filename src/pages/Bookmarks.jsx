@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMyContext } from "../MyContext";
+import { useNavigate } from "react-router-dom";
 
 const Bookmarks = () => {
   const [bookmarks, setBookmarks] = useState([]);
   // Destructure context values
   const { setCountry, setLatitude, setLongitude, setText } = useMyContext();
+  const navigate = useNavigate();
 
   // Set context values
   const handleBookmarkClick = (bookmark) => {
@@ -39,15 +41,28 @@ const Bookmarks = () => {
   };
 
   return (
-    <div className="w-3/4 mx-auto">
+    <div className="w-3/4 mx-auto mt-10">
       <div>
         <h2 className="text-2xl text-center font-bold mb-4">Your Bookmarks</h2>
-        <p className="text-lg text-center font-semibold mb-4">Click to see current Weather</p>
+        <p className="text-lg text-center font-semibold mb-4">
+          Click to see current Weather
+        </p>
+        <div className="flex justify-center md:justify-end w-full mb-4">
+          <button
+            onClick={() => navigate("/")}
+            className="px-5 py-3 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none transition"
+          >
+            Back to Weather
+          </button>
+        </div>
 
         {bookmarks.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 ml-6 mr-6">
             {bookmarks.map((bookmark, index) => (
-              <div key={index} className="mb-4 p-3 md:p-4 border border-blue-200 rounded-xl text-center">
+              <div
+                key={index}
+                className="mb-4 p-3 md:p-4 border border-blue-200 rounded-xl text-center"
+              >
                 <Link
                   to="/cities"
                   className="text-blue-500 hover:underline"

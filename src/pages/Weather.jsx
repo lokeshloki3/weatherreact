@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MyContext } from "../MyContext";
+import Tile from "../components/Tile";
 
 const Weather = () => {
   const navigate = useNavigate();
@@ -72,14 +73,6 @@ const Weather = () => {
     setShowDropdown(false);
   };
 
-  const handleBookmarkClick = (bookmark) => {
-    setText(bookmark.city);
-    setCountry(bookmark.country);
-    setLatitude(bookmark.latitude);
-    setLongitude(bookmark.longitude);
-    navigate("/cities");
-  };
-
   return (
     <div className="flex justify-center items-center">
       <div className="w-3/4 text-center">
@@ -121,25 +114,23 @@ const Weather = () => {
         {bookmarks.length > 0 && (
           <div className="mt-24 w-3/4 mx-auto">
             <h2 className="text-xl font-semibold mb-6">Your Favourites</h2>
-            <p className="text-base text-center mb-4">Click to see current Weather</p>
+            <p className="text-base text-center mb-4">
+              Click to see current Weather
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {bookmarks.slice(0, 4).map((bookmark, index) => (
-                <div
-                  key={index}
-                  className="cursor-pointer mb-4 p-2 border border-blue-200 rounded-xl"
-                  onClick={() => handleBookmarkClick(bookmark)}
-                >
-                  {bookmark.city}, {bookmark.country}
-                </div>
+                <Tile key={index} bookmark={bookmark} />
               ))}
-            </div>
-            <div className="mt-4">
-              <Link
-                to="/bookmarks"
-                className="border border-blue-200 p-2 pl-4 pr-4 hover:bg-blue-500 w-full md:w-96 mx-auto rounded-xl font-semibold cursor-pointer"
-              >
-                Click here for more than 4
-              </Link>
+              {bookmarks.length < 4 ? undefined : (
+                <div className="mt-4">
+                  <Link
+                    to="/bookmarks"
+                    className="border border-blue-200 p-2 pl-4 pr-4 hover:bg-blue-500 w-full md:w-96 mx-auto rounded-xl font-semibold cursor-pointer"
+                  >
+                    Click here for more than 4
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         )}
