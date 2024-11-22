@@ -39,8 +39,8 @@ const Bookmarks = () => {
   };
 
   return (
-    <div>
-      <div className="w-[90%] mx-auto">
+    <div className="w-3/4 mx-auto">
+      <div>
         <h2 className="text-2xl text-center font-bold mb-4">Your Bookmarks</h2>
         <p className="text-lg text-center font-semibold mb-4">Click to see current Weather</p>
 

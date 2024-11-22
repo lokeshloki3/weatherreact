@@ -1,9 +1,13 @@
 import React, { useContext, useState, useEffect } from "react";
 import { MyContext } from "../MyContext";
+import { useNavigate } from "react-router-dom";
+import humidity from "../assets/humidity.png";
+import wind from "../assets/wind.png";
 
 const Cities = () => {
   const { text, country, latitude, longitude } = useContext(MyContext);
   const [weatherData, setWeatherData] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (latitude && longitude) {
@@ -35,8 +39,9 @@ const Cities = () => {
         longitude: longitude,
       };
 
-      const existingBookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
-      
+      const existingBookmarks =
+        JSON.parse(localStorage.getItem("bookmarks")) || [];
+
       const isBookmarkExist = existingBookmarks.some(
         (b) => b.latitude === latitude && b.longitude === longitude
       );
@@ -54,24 +59,60 @@ const Cities = () => {
   };
 
   return (
-    <div>
-      <h2>
-        Weather for {text || "NA"}, {country || "NA"}
-      </h2>
+    <div className="flex justify-center items-center bg-gray-100 p-6">
+      <div className="w-full md:w-3/4 lg:w-2/3 bg-white p-8 rounded-xl shadow-xl">
+        <h2 className="text-3xl font-semibold text-gray-800 text-center mb-14">
+          Current Weather for {text || "NA"}, {country || "NA"}
+        </h2>
 
-      {weatherData && weatherData.current_weather && (
-        <div>
-          <h3>Current Weather:</h3>
-          <p>Temperature: {weatherData.current_weather.temperature}°C</p>
-          <p>Wind Speed: {weatherData.current_weather.windspeed} km/h</p>
-          <p>Wind Direction: {weatherData.current_weather.winddirection}°</p>
-          <p>
-            Daytime: {weatherData.current_weather.is_day === 1 ? "Yes" : "No"}
-          </p>
+        {weatherData && weatherData.current_weather && (
+          <div className="text-center text-gray-700 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="flex flex-col border border-blue-200 rounded-lg mx-auto p-2 pb-1 min-w-44">
+                <img src={humidity} className="w-1/2 h-auto mx-auto"/>
+                <p className="mb-2">
+                  Temperature: {weatherData.current_weather.temperature}°C
+                </p>
+              </div>
+              <div className="flex flex-col border border-blue-200 rounded-lg mx-auto p-2 pb-1 min-w-44">
+                <img src={wind} className="w-1/2 h-auto mx-auto"/>
+                <p className="mb-2">
+                  Wind Speed: {weatherData.current_weather.windspeed} km/h
+                </p>
+              </div>
+              <div className="flex flex-col border border-blue-200 rounded-lg mx-auto p-2 pb-1 min-w-44">
+                <img src={humidity} className="w-1/2 h-auto mx-auto"/>
+                <p className="mb-2">
+                  Wind Direction: {weatherData.current_weather.winddirection}°
+                </p>
+              </div>
+              <div className="flex flex-col border border-blue-200 rounded-lg mx-auto p-2 pb-1 min-w-44">
+                <img src={humidity} className="w-1/2 h-auto mx-auto"/>
+                <p className="mb-2">
+                  Daytime:{" "}
+                  {weatherData.current_weather.is_day === 1 ? "Yes" : "No"}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="flex justify-between gap-4">
+          <button
+            onClick={handleAddToBookmarks}
+            className="w-full md:w-48 px-5 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none transition"
+          >
+            Add to Bookmarks
+          </button>
+
+          <button
+            onClick={() => navigate("/")}
+            className="w-full md:w-48 px-5 py-3 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none transition"
+          >
+            Back to Weather
+          </button>
         </div>
-      )}
-
-      <button onClick={handleAddToBookmarks}>Add to Bookmarks</button>
+      </div>
     </div>
   );
 };

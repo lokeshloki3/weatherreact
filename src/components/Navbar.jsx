@@ -4,8 +4,8 @@ import { NavLink } from 'react-router-dom'
 const Navbar = () => {
   return (
     <div>
-        <ul className='flex justify-between bg-slate-400 p-6 m-6 rounded-lg'>
-            <NavLink to="/weather">
+        <ul className='w-full md:w-3/4 mx-auto flex justify-between bg-blue-200 p-6 m-6 rounded-lg'>
+            <NavLink to="/">
                 <li className="text-lg font-semibold">Search Weather</li>
             </NavLink>
             <NavLink to="/bookmarks">

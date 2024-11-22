@@ -20,7 +20,6 @@ const Weather = () => {
     setCountry,
   } = useContext(MyContext);
 
-  // Get the list of bookmarks from localStorage
   const [bookmarks, setBookmarks] = useState([]);
   useEffect(() => {
     const storedBookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
@@ -120,13 +119,14 @@ const Weather = () => {
         </div>
 
         {bookmarks.length > 0 && (
-          <div className="mt-24">
-            <h2 className="text-xl font-semibold mb-8">Your Bookmarks</h2>
+          <div className="mt-24 w-3/4 mx-auto">
+            <h2 className="text-xl font-semibold mb-6">Your Favourites</h2>
+            <p className="text-base text-center mb-4">Click to see current Weather</p>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {bookmarks.map((bookmark, index) => (
+              {bookmarks.slice(0, 4).map((bookmark, index) => (
                 <div
                   key={index}
-                  className="cursor-pointer mb-2 p-2 border border-blue-200 rounded-xl"
+                  className="cursor-pointer mb-4 p-2 border border-blue-200 rounded-xl"
                   onClick={() => handleBookmarkClick(bookmark)}
                 >
                   {bookmark.city}, {bookmark.country}
@@ -136,9 +136,9 @@ const Weather = () => {
             <div className="mt-4">
               <Link
                 to="/bookmarks"
-                className="border border-blue-200 p-2 hover:bg-blue-500 w-full md:w-96 mx-auto rounded-lg font-semibold cursor-pointer"
+                className="border border-blue-200 p-2 pl-4 pr-4 hover:bg-blue-500 w-full md:w-96 mx-auto rounded-xl font-semibold cursor-pointer"
               >
-                Click here for more than 10 bookmarks
+                Click here for more than 4
               </Link>
             </div>
           </div>
