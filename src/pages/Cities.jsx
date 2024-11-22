@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { MyContext } from "../MyContext";
 
 const Cities = () => {
-  const { text, country, latitude, longitude } = useContext(MyContext); // Get data from context
+  const { text, country, latitude, longitude } = useContext(MyContext);
   const [weatherData, setWeatherData] = useState(null);
 
   useEffect(() => {
@@ -35,16 +35,21 @@ const Cities = () => {
         longitude: longitude,
       };
 
-      const existingBookmarks =
-        JSON.parse(localStorage.getItem("bookmarks")) || [];
+      const existingBookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+      
+      const isBookmarkExist = existingBookmarks.some(
+        (b) => b.latitude === latitude && b.longitude === longitude
+      );
 
-      existingBookmarks.push(bookmark);
-
-      localStorage.setItem("bookmarks", JSON.stringify(existingBookmarks));
-
-      alert("City added to bookmarks!");
+      if (isBookmarkExist) {
+        alert("This city is already in your bookmarks!");
+      } else {
+        existingBookmarks.push(bookmark);
+        localStorage.setItem("bookmarks", JSON.stringify(existingBookmarks));
+        alert("City added to bookmarks!");
+      }
     } else {
-      alert("Incomplete information to bookmark the city.");
+      alert("Not added");
     }
   };
 
@@ -53,8 +58,6 @@ const Cities = () => {
       <h2>
         Weather for {text || "NA"}, {country || "NA"}
       </h2>
-      <p>Latitude: {latitude}</p>
-      <p>Longitude: {longitude}</p>
 
       {weatherData && weatherData.current_weather && (
         <div>

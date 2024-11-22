@@ -4,15 +4,10 @@ import { useMyContext } from "../MyContext";
 
 const Bookmarks = () => {
   const [bookmarks, setBookmarks] = useState([]);
-  const { setCountry, setLatitude, setLongitude, setText } = useMyContext(); // Destructure context values
+  // Destructure context values
+  const { setCountry, setLatitude, setLongitude, setText } = useMyContext();
 
-  // Fetch bookmarks from localStorage
-  useEffect(() => {
-    const storedBookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
-    setBookmarks(storedBookmarks);
-  }, []);
-
-  // Handle bookmark click to set context values
+  // Set context values
   const handleBookmarkClick = (bookmark) => {
     setText(bookmark.city);
     setCountry(bookmark.country);
@@ -20,20 +15,26 @@ const Bookmarks = () => {
     setLongitude(bookmark.longitude);
   };
 
-  // Handle removing a bookmark
-  const handleRemoveBookmark = (latitude, longitude) => {
-    // Get the existing bookmarks from localStorage
-    const existingBookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+  // Fetch bookmarks
+  useEffect(() => {
+    const storedBookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+    setBookmarks(storedBookmarks);
+  }, []);
 
-    // Filter out the bookmark to be removed (based on both latitude and longitude)
+  const handleRemoveBookmark = (latitude, longitude) => {
+    const existingBookmarks =
+      JSON.parse(localStorage.getItem("bookmarks")) || [];
+
+    // Filter out (based on latitude and longitude)
     const updatedBookmarks = existingBookmarks.filter(
-      (bookmark) => bookmark.latitude !== latitude && bookmark.longitude !== longitude
+      (bookmark) =>
+        bookmark.latitude !== latitude && bookmark.longitude !== longitude
     );
 
-    // Update the bookmarks in localStorage
+    // Update in localStorage
     localStorage.setItem("bookmarks", JSON.stringify(updatedBookmarks));
 
-    // Update the state to reflect the change
+    // Update state to reflect change
     setBookmarks(updatedBookmarks);
   };
 
@@ -49,18 +50,19 @@ const Bookmarks = () => {
                 <Link
                   to="/cities"
                   className="text-blue-500 hover:underline"
-                  onClick={() => handleBookmarkClick(bookmark)} // Set context when clicked
+                  onClick={() => handleBookmarkClick(bookmark)}
                 >
                   <h3 className="text-xl font-semibold">
                     {bookmark.city}, {bookmark.country}
                   </h3>
                 </Link>
-                <p>Latitude: {bookmark.latitude}</p>
-                <p>Longitude: {bookmark.longitude}</p>
+                {/* <p>Latitude: {bookmark.latitude}</p>
+                <p>Longitude: {bookmark.longitude}</p> */}
 
-                {/* Remove Button */}
                 <button
-                  onClick={() => handleRemoveBookmark(bookmark.latitude, bookmark.longitude)}
+                  onClick={() =>
+                    handleRemoveBookmark(bookmark.latitude, bookmark.longitude)
+                  }
                   className="text-red-500 hover:text-red-700 mt-2"
                 >
                   Remove Bookmark
@@ -69,7 +71,14 @@ const Bookmarks = () => {
             ))}
           </div>
         ) : (
-          <p>No bookmarks available.</p>
+          <div>
+            <p>No bookmarks available.</p>
+            <Link to="/weather">
+              <button className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                Search for Weather
+              </button>
+            </Link>
+          </div>
         )}
       </div>
     </div>
