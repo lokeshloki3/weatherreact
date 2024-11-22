@@ -15,7 +15,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/weather" element={<Weather />} />
           <Route path="/bookmarks" element={<Bookmarks />} />
-          <Route path="/cities" element={<Cities />} />
+          <Route path="/cities/:latitude/:longitude" element={<Cities />} />
         </Routes>
       </div>
     </MyContextProvider>

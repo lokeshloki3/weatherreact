@@ -7,7 +7,7 @@ const Weather = () => {
   const navigate = useNavigate();
   const [city, setCity] = useState("");
   const [cities, setCities] = useState([]);
-  const { text, setText, latitude, setLatitude, longitude, setLongitude } = useContext(MyContext);
+  const { text, setText, latitude, setLatitude, longitude, setLongitude, country, setCountry } = useContext(MyContext);
 
   const handleSearch = async (newCity) => {
     if (!newCity) {
@@ -31,9 +31,10 @@ const Weather = () => {
 
   const selectedCity = (city) => {
     setText(city.name);
+    setCountry(city.country);
     setLatitude(city.latitude);
     setLongitude(city.longitude);
-    navigate("/cities");
+    navigate(`/cities/${city.latitude}/${city.longitude}`);
   };
 
   return (
