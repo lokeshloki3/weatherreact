@@ -1,5 +1,4 @@
-// Weather.js
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MyContext } from "../MyContext";
 
@@ -7,6 +6,9 @@ const Weather = () => {
   const navigate = useNavigate();
   const [city, setCity] = useState("");
   const [cities, setCities] = useState([]);
+  const dropdownRef = useRef(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+
   const {
     text,
     setText,
@@ -25,9 +27,25 @@ const Weather = () => {
     setBookmarks(storedBookmarks);
   }, []);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setShowDropdown(false);
+        setCity("");
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const handleSearch = async (newCity) => {
     if (!newCity) {
       setCities([]);
+      setShowDropdown(false);
       return;
     }
     try {
@@ -37,6 +55,7 @@ const Weather = () => {
       const data = await response.json();
       if (data.results) {
         setCities(data.results);
+        setShowDropdown(true);
       } else {
         console.log("No cities found");
       }
@@ -51,6 +70,7 @@ const Weather = () => {
     setLatitude(city.latitude);
     setLongitude(city.longitude);
     navigate("/cities");
+    setShowDropdown(false);
   };
 
   const handleBookmarkClick = (bookmark) => {
@@ -76,8 +96,12 @@ const Weather = () => {
               handleSearch(e.target.value);
             }}
           />
-          {cities.length ? (
-            <div className="border border-blue-200 shadow-lg rounded-lg">
+
+          {showDropdown && cities.length > 0 && (
+            <div
+              ref={dropdownRef}
+              className="border border-blue-200 shadow-lg rounded-lg"
+            >
               {cities.map((city, index) => (
                 <div
                   key={index}
@@ -92,8 +116,6 @@ const Weather = () => {
                 </div>
               ))}
             </div>
-          ) : (
-            ""
           )}
         </div>
 
@@ -116,7 +138,7 @@ const Weather = () => {
                 to="/bookmarks"
                 className="border border-blue-200 p-2 hover:bg-blue-500 w-full md:w-96 mx-auto rounded-lg font-semibold cursor-pointer"
               >
-                Click here for than 10 bookmarks
+                Click here for more than 10 bookmarks
               </Link>
             </div>
           </div>
