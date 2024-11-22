@@ -64,12 +64,12 @@ const Weather = () => {
   return (
     <div className="flex justify-center items-center">
       <div className="w-3/4 text-center">
-        <h1>Weather</h1>
-        <div className="flex flex-col">
+        <h1 className="text-4xl m-8">Weather App</h1>
+        <div className="flex flex-col w-[100%] md:w-[60%] mx-auto">
           <input
             type="text"
             placeholder="Search for City"
-            className="border"
+            className="p-2 border border-blue-200 rounded-xl"
             value={city}
             onChange={(e) => {
               setCity(e.target.value);
@@ -77,14 +77,18 @@ const Weather = () => {
             }}
           />
           {cities.length ? (
-            <div className="border mt-5 shadow-lg">
+            <div className="border border-blue-200 shadow-lg rounded-lg">
               {cities.map((city, index) => (
                 <div
                   key={index}
                   className="cursor-pointer hover:bg-gray-200"
                   onClick={() => selectedCity(city)}
                 >
-                  {city.country_code}, {city.name}, {city.country}
+                  <div className="grid grid-cols-[100px_1fr_30px] w-[80%] mx-auto text-center ml-0 md:ml-auto">
+                    <div>{city.name}</div>
+                    <div>{city.country}</div>
+                    <div>{city.country_code}</div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -94,9 +98,9 @@ const Weather = () => {
         </div>
 
         {bookmarks.length > 0 && (
-          <div className="mt-32">
+          <div className="mt-24">
             <h2 className="text-xl font-semibold mb-8">Your Bookmarks</h2>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {bookmarks.map((bookmark, index) => (
                 <div
                   key={index}
@@ -110,9 +114,9 @@ const Weather = () => {
             <div className="mt-4">
               <Link
                 to="/bookmarks"
-                className="border border-blue-200 p-2 hover:bg-blue-500 w-96 mx-auto rounded-lg font-semibold cursor-pointer"
+                className="border border-blue-200 p-2 hover:bg-blue-500 w-full md:w-96 mx-auto rounded-lg font-semibold cursor-pointer"
               >
-                Click here to see more than 10 bookmarks
+                Click here for than 10 bookmarks
               </Link>
             </div>
           </div>

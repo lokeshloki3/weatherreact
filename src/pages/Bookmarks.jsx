@@ -45,9 +45,9 @@ const Bookmarks = () => {
         <p className="text-lg text-center font-semibold mb-4">Click to see current Weather</p>
 
         {bookmarks.length > 0 ? (
-          <div className="grid grid-cols-4 gap-4 ml-6 mr-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 ml-6 mr-6">
             {bookmarks.map((bookmark, index) => (
-              <div key={index} className="mb-4 p-4 border border-blue-200 rounded-xl text-center">
+              <div key={index} className="mb-4 p-3 md:p-4 border border-blue-200 rounded-xl text-center">
                 <Link
                   to="/cities"
                   className="text-blue-500 hover:underline"
