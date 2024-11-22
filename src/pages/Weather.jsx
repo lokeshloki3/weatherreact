@@ -1,5 +1,5 @@
 // Weather.js
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MyContext } from '../MyContext';
 
@@ -8,6 +8,13 @@ const Weather = () => {
   const [city, setCity] = useState("");
   const [cities, setCities] = useState([]);
   const { text, setText, latitude, setLatitude, longitude, setLongitude, country, setCountry } = useContext(MyContext);
+
+  // Get the list of bookmarks from localStorage
+  const [bookmarks, setBookmarks] = useState([]);
+  useEffect(() => {
+    const storedBookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+    setBookmarks(storedBookmarks);
+  }, []);
 
   const handleSearch = async (newCity) => {
     if (!newCity) {
@@ -34,6 +41,14 @@ const Weather = () => {
     setCountry(city.country);
     setLatitude(city.latitude);
     setLongitude(city.longitude);
+    navigate("/cities");
+  };
+
+  const handleBookmarkClick = (bookmark) => {
+    setText(bookmark.city);
+    setCountry(bookmark.country);
+    setLatitude(bookmark.latitude);
+    setLongitude(bookmark.longitude);
     navigate("/cities");
   };
 
@@ -68,6 +83,22 @@ const Weather = () => {
             ""
           )}
         </div>
+
+        {bookmarks.length > 0 && (
+          <div className="mt-5">
+            <h2 className="text-xl font-semibold mb-2">Your Bookmarks</h2>
+            {bookmarks.map((bookmark, index) => (
+              <div
+                key={index}
+                className="cursor-pointer mb-2 p-2 border-b hover:bg-gray-100"
+                onClick={() => handleBookmarkClick(bookmark)}
+              >
+                {bookmark.city}, {bookmark.country}
+              </div>
+            ))}
+          </div>
+        )}
+
       </div>
     </div>
   );
