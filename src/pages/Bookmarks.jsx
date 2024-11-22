@@ -20,6 +20,23 @@ const Bookmarks = () => {
     setLongitude(bookmark.longitude);
   };
 
+  // Handle removing a bookmark
+  const handleRemoveBookmark = (latitude, longitude) => {
+    // Get the existing bookmarks from localStorage
+    const existingBookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+
+    // Filter out the bookmark to be removed (based on both latitude and longitude)
+    const updatedBookmarks = existingBookmarks.filter(
+      (bookmark) => bookmark.latitude !== latitude && bookmark.longitude !== longitude
+    );
+
+    // Update the bookmarks in localStorage
+    localStorage.setItem("bookmarks", JSON.stringify(updatedBookmarks));
+
+    // Update the state to reflect the change
+    setBookmarks(updatedBookmarks);
+  };
+
   return (
     <div className="min-h-screen flex justify-center items-center">
       <div className="w-3/4 text-center">
@@ -38,11 +55,16 @@ const Bookmarks = () => {
                     {bookmark.city}, {bookmark.country}
                   </h3>
                 </Link>
-                <h3 className="text-xl font-semibold">
-                  {bookmark.city}, {bookmark.country}
-                </h3>
                 <p>Latitude: {bookmark.latitude}</p>
                 <p>Longitude: {bookmark.longitude}</p>
+
+                {/* Remove Button */}
+                <button
+                  onClick={() => handleRemoveBookmark(bookmark.latitude, bookmark.longitude)}
+                  className="text-red-500 hover:text-red-700 mt-2"
+                >
+                  Remove Bookmark
+                </button>
               </div>
             ))}
           </div>
