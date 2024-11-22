@@ -75,8 +75,7 @@ const Cities = () => {
             <img src={loadingGif} alt="Loading..." className="w-16 h-16" />
           </div>
         ) : (
-          weatherData &&
-          weatherData.current_weather && (
+          weatherData && weatherData.current_weather && (
             <div className="text-center text-gray-700 mb-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex flex-col border border-blue-200 rounded-lg mx-auto p-2 pb-1 min-w-44">

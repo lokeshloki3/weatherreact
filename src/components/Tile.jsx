@@ -1,18 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../MyContext";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Tile = ({ bookmark }) => {
   const navigate = useNavigate();
   const [weatherData, setWeatherData] = useState(null);
   const {
-    text,
     setText,
-    latitude,
     setLatitude,
-    longitude,
     setLongitude,
-    country,
     setCountry,
   } = useContext(MyContext);
 
