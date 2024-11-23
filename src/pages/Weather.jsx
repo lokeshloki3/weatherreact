@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MyContext } from "../MyContext";
 import Tile from "../components/Tile";
@@ -7,7 +7,6 @@ const Weather = () => {
   const navigate = useNavigate();
   const [city, setCity] = useState("");
   const [cities, setCities] = useState([]);
-  const dropdownRef = useRef(null);
   const [showDropdown, setShowDropdown] = useState(false);
 
   const {
@@ -27,23 +26,19 @@ const Weather = () => {
     setBookmarks(storedBookmarks);
   }, []);
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setShowDropdown(false);
-        setCity("");
-      }
-    };
+  const handleBlur = () => {
+    if (!city) {
+      setShowDropdown(false);
+      setCity("");
+    }
+  };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  const handleFocus = () => {
+    setShowDropdown(true);
+  };
 
   const handleSearch = async (newCity) => {
-    if (!newCity) {
+    if (!newCity || newCity.length <= 1) {
       setCities([]);
       setShowDropdown(false);
       return;
@@ -87,13 +82,12 @@ const Weather = () => {
               setCity(e.target.value);
               handleSearch(e.target.value);
             }}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
           />
 
           {showDropdown && cities.length > 0 && (
-            <div
-              ref={dropdownRef}
-              className="border border-blue-200 shadow-lg rounded-lg"
-            >
+            <div className="border border-blue-200 shadow-lg rounded-lg">
               {cities.map((city, index) => (
                 <div
                   key={index}
@@ -115,22 +109,12 @@ const Weather = () => {
           <div className="mt-24 w-3/4 mx-auto">
             <h2 className="text-xl font-semibold mb-6">Your Favourites</h2>
             <p className="text-base text-center mb-4">
-              Click to see current Weather
+              Click to see more info of current Weather
             </p>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {bookmarks.slice(0, 4).map((bookmark, index) => (
+              {bookmarks.map((bookmark, index) => (
                 <Tile key={index} bookmark={bookmark} />
               ))}
-              {bookmarks.length < 4 ? undefined : (
-                <div className="mt-4">
-                  <Link
-                    to="/bookmarks"
-                    className="border border-blue-200 p-2 pl-4 pr-4 hover:bg-blue-500 w-full md:w-96 mx-auto rounded-xl font-semibold cursor-pointer"
-                  >
-                    Click here for more than 4
-                  </Link>
-                </div>
-              )}
             </div>
           </div>
         )}

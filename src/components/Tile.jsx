@@ -1,22 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../MyContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Tile = ({ bookmark }) => {
   const navigate = useNavigate();
   const [weatherData, setWeatherData] = useState(null);
-  const {
-    setText,
-    setLatitude,
-    setLongitude,
-    setCountry,
-  } = useContext(MyContext);
+  const { setText, setLatitude, setLongitude, setCountry } =
+    useContext(MyContext);
 
   useEffect(() => {
     const fetchWeatherData = async () => {
       try {
         const response = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${bookmark.latitude}&longitude=${bookmark.longitude}&current_weather=true`
+          `https://api.open-meteo.com/v1/forecast?latitude=${bookmark.latitude}&longitude=${bookmark.longitude}&current=temperature_2m,relative_humidity_2m,is_day,precipitation,rain,showers,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch weather data");
@@ -43,11 +39,26 @@ const Tile = ({ bookmark }) => {
   return (
     <div>
       <div
-        className="cursor-pointer mb-4 p-2 border border-blue-200 rounded-xl hover:bg-blue-500"
-        onClick={() => handleBookmarkClick(bookmark)}
+        className="cursor-pointer mb-4 p-2 border border-blue-200 rounded-xl"
       >
-        {bookmark.city}, {bookmark.country},{" "}
-        {weatherData?.current_weather.temperature}
+        <Link
+          to="/cities"
+          className="text-blue-500 hover:underline"
+          onClick={() => handleBookmarkClick(bookmark)}
+        >
+          <h3 className="text-lg font-semibold">
+            {bookmark.city}, {bookmark.country}
+          </h3>
+        </Link>
+        {weatherData?.current.temperature_2m},
+        <button
+          onClick={() =>
+            handleRemoveBookmark(bookmark.latitude, bookmark.longitude)
+          }
+          className="text-red-500 hover:text-red-700 hover:underline"
+        >
+          Remove Bookmark
+        </button>
       </div>
     </div>
   );
