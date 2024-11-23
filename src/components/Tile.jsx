@@ -38,9 +38,7 @@ const Tile = ({ bookmark }) => {
 
   return (
     <div>
-      <div
-        className="cursor-pointer mb-4 p-2 border border-blue-200 rounded-xl"
-      >
+      <div className="cursor-pointer mb-4 pt-2 pb-2 pl-1 pr-1 md:p-2 border border-blue-200 rounded-xl">
         <Link
           to="/cities"
           className="text-blue-500 hover:underline"
@@ -50,7 +48,7 @@ const Tile = ({ bookmark }) => {
             {bookmark.city}, {bookmark.country}
           </h3>
         </Link>
-        {weatherData?.current.temperature_2m},
+        <div>{weatherData?.current.temperature_2m}</div>
         <button
           onClick={() =>
             handleRemoveBookmark(bookmark.latitude, bookmark.longitude)

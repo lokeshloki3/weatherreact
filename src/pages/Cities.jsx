@@ -70,7 +70,7 @@ const Cities = () => {
 
       const existingBookmarks =
         JSON.parse(localStorage.getItem("bookmarks")) || [];
-        
+
       const isBookmarkExist = existingBookmarks.some(
         (b) => b.latitude === latitude && b.longitude === longitude
       );
@@ -107,59 +107,61 @@ const Cities = () => {
 
   return (
     <div className="flex justify-center items-center p-6">
-      <div className="w-full md:w-3/4 lg:w-2/3 bg-white p-8 rounded-xl">
+      <div className="w-full md:w-3/4 bg-white p-0 md:p-8 rounded-xl">
         {noData ? (
-          <div className="text-center">
-            <h2 className="text-3xl font-semibold text-gray-800 mb-4">
-              No Data Found
-            </h2>
-            <button
-              onClick={() => navigate("/")}
-              className="px-5 py-3 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none transition"
-            >
-              Go Home
-            </button>
+          <div className="fixed inset-0 flex justify-center items-center bg-white bg-opacity-50 z-50">
+            <div className="text-center">
+              <h2 className="text-3xl font-semibold text-gray-800 mb-4">
+                No Data Found
+              </h2>
+              <button
+                onClick={() => navigate("/")}
+                className="px-5 py-3 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none transition"
+              >
+                Go Home
+              </button>
+            </div>
           </div>
         ) : (
           <>
             {loading ? (
-              <div className="flex justify-center my-8">
+              <div className="fixed inset-0 flex justify-center items-center bg-white bg-opacity-50 z-50">
                 <img src={loadingGif} alt="Loading..." className="w-16 h-16" />
               </div>
             ) : (
               <>
                 {weatherData && weatherData.current_weather && (
-                  <h2 className="text-3xl font-semibold text-gray-800 text-center mb-14">
+                  <h2 className="text-3xl font-semibold text-gray-800 text-center mb-14 mt-12">
                     Current Weather for {text || "NA"}, {country || "NA"}
                   </h2>
                 )}
 
                 {weatherData && weatherData.current_weather ? (
                   <div className="text-center text-gray-700 mb-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                       <div className="flex flex-col border border-blue-200 rounded-lg mx-auto p-2 pb-1 min-w-44">
-                        <img src={humidity} className="w-1/2 h-auto mx-auto" />
+                        <img src={humidity} className="w-1/3 h-auto mx-auto" />
                         <p className="mb-2">
                           Temperature: {weatherData.current_weather.temperature}
                           °C
                         </p>
                       </div>
-                      <div className="flex flex-col border border-blue-200 rounded-lg mx-auto p-2 pb-1 min-w-44">
-                        <img src={wind} className="w-1/2 h-auto mx-auto" />
+                      <div className="flex flex-col border border-blue-200 rounded-lg mx-auto p-0 md:p-2 pb-1 min-w-44">
+                        <img src={wind} className="w-1/3 h-auto mx-auto" />
                         <p className="mb-2">
                           Wind Speed: {weatherData.current_weather.windspeed}{" "}
                           km/h
                         </p>
                       </div>
                       <div className="flex flex-col border border-blue-200 rounded-lg mx-auto p-2 pb-1 min-w-44">
-                        <img src={humidity} className="w-1/2 h-auto mx-auto" />
+                        <img src={humidity} className="w-1/3 h-auto mx-auto" />
                         <p className="mb-2">
                           Wind Direction:{" "}
                           {weatherData.current_weather.winddirection}°
                         </p>
                       </div>
                       <div className="flex flex-col border border-blue-200 rounded-lg mx-auto p-2 pb-1 min-w-44">
-                        <img src={humidity} className="w-1/2 h-auto mx-auto" />
+                        <img src={humidity} className="w-1/3 h-auto mx-auto" />
                         <p className="mb-2">
                           Daytime:{" "}
                           {weatherData.current_weather.is_day === 1
@@ -172,23 +174,23 @@ const Cities = () => {
                 ) : null}
 
                 {weatherData && weatherData.current_weather && (
-                  <div className="flex justify-between gap-4 mt-6">
+                  <div className="flex justify-between gap-4 mt-6 flex-col md:flex-row">
                     <button
                       onClick={
                         isBookmarked
                           ? handleRemoveFromBookmarks
                           : handleAddToBookmarks
                       }
-                      className="w-full md:w-48 px-5 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none transition"
+                      className="w-56 mx-auto py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none transition"
                     >
                       {isBookmarked
-                        ? "Remove from Bookmarks"
-                        : "Add to Bookmarks"}
+                        ? "Remove from Favourites"
+                        : "Add to Favourites"}
                     </button>
 
                     <button
                       onClick={() => navigate("/")}
-                      className="w-full md:w-48 px-5 py-3 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none transition"
+                      className="w-56 mx-auto py-3 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none transition"
                     >
                       Back to Weather
                     </button>

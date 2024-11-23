@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MyContext } from "../MyContext";
 import Tile from "../components/Tile";
@@ -7,6 +7,7 @@ const Weather = () => {
   const navigate = useNavigate();
   const [city, setCity] = useState("");
   const [cities, setCities] = useState([]);
+  const dropdownRef = useRef(null);
   const [showDropdown, setShowDropdown] = useState(false);
 
   const {
@@ -26,16 +27,20 @@ const Weather = () => {
     setBookmarks(storedBookmarks);
   }, []);
 
-  const handleBlur = () => {
-    if (!city) {
-      setShowDropdown(false);
-      setCity("");
-    }
-  };
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setShowDropdown(false);
+        setCity("");
+      }
+    };
 
-  const handleFocus = () => {
-    setShowDropdown(true);
-  };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleSearch = async (newCity) => {
     if (!newCity || newCity.length <= 1) {
@@ -70,8 +75,8 @@ const Weather = () => {
 
   return (
     <div className="flex justify-center items-center">
-      <div className="w-3/4 text-center">
-        <h1 className="text-4xl m-8">Weather App</h1>
+      <div className="w-[90%] md:w-3/4 text-center">
+        <h1 className="text-4xl m-8 mt-20">Weather App</h1>
         <div className="flex flex-col w-[100%] md:w-[60%] mx-auto">
           <input
             type="text"
@@ -82,12 +87,13 @@ const Weather = () => {
               setCity(e.target.value);
               handleSearch(e.target.value);
             }}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
           />
 
           {showDropdown && cities.length > 0 && (
-            <div className="border border-blue-200 shadow-lg rounded-lg">
+            <div
+              ref={dropdownRef}
+              className="border border-blue-200 shadow-lg rounded-lg"
+            >
               {cities.map((city, index) => (
                 <div
                   key={index}
@@ -106,12 +112,12 @@ const Weather = () => {
         </div>
 
         {bookmarks.length > 0 && (
-          <div className="mt-24 w-3/4 mx-auto">
+          <div className="mt-16 w-full md:w-3/4 mx-auto">
             <h2 className="text-xl font-semibold mb-6">Your Favourites</h2>
             <p className="text-base text-center mb-4">
               Click to see more info of current Weather
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-4">
               {bookmarks.map((bookmark, index) => (
                 <Tile key={index} bookmark={bookmark} />
               ))}
