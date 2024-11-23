@@ -1,7 +1,9 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { MyContext } from "../MyContext";
 import Tile from "../components/Tile";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Weather = () => {
   const navigate = useNavigate();
@@ -10,22 +12,30 @@ const Weather = () => {
   const dropdownRef = useRef(null);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const {
-    text,
-    setText,
-    latitude,
-    setLatitude,
-    longitude,
-    setLongitude,
-    country,
-    setCountry,
-  } = useContext(MyContext);
+  const { setText, setLatitude, setLongitude, setCountry } =
+    useContext(MyContext);
 
   const [bookmarks, setBookmarks] = useState([]);
+
+  // Fetch bookmarks from localStorage
   useEffect(() => {
     const storedBookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
     setBookmarks(storedBookmarks);
   }, []);
+
+  const handleRemove = (bookmark) => {
+    const storedBookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+    const updatedBookmarks = storedBookmarks.filter(
+      (b) =>
+        b.latitude !== bookmark.latitude || b.longitude !== bookmark.longitude
+    );
+
+    localStorage.setItem("bookmarks", JSON.stringify(updatedBookmarks));
+
+    setBookmarks(updatedBookmarks);
+
+    toast.success(`${bookmark.city} removed from bookmarks!`);
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -50,17 +60,15 @@ const Weather = () => {
     }
     try {
       const response = await fetch(
-        `https://geocoding-api.open-meteo.com/v1/search?name=${newCity}&count=15&language=en&format=json`
+        `https://geocoding-api.open-meteo.com/v1/search?name=${newCity}&count=6&language=en&format=json`
       );
       const data = await response.json();
       if (data.results) {
         setCities(data.results);
         setShowDropdown(true);
-      } else {
-        console.log("No cities found");
       }
     } catch (err) {
-      console.log("Failed to fetch city data");
+      toast.error("Failed to fetch city data");
     }
   };
 
@@ -74,9 +82,9 @@ const Weather = () => {
   };
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex justify-center bg-slate-200 h-screen">
       <div className="w-[90%] md:w-3/4 text-center">
-        <h1 className="text-4xl m-8 mt-20">Weather App</h1>
+        <h1 className="text-4xl mb-8 mt-20">Weather App</h1>
         <div className="flex flex-col w-[100%] md:w-[60%] mx-auto">
           <input
             type="text"
@@ -92,7 +100,7 @@ const Weather = () => {
           {showDropdown && cities.length > 0 && (
             <div
               ref={dropdownRef}
-              className="border border-blue-200 shadow-lg rounded-lg"
+              className="border border-blue-200 shadow-lg p-1 rounded-lg fixed bg-white z-10 w-[90%] md:w-[45%] transform translate-y-11"
             >
               {cities.map((city, index) => (
                 <div
@@ -117,14 +125,19 @@ const Weather = () => {
             <p className="text-base text-center mb-4">
               Click to see more info of current Weather
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-1 md:gap-4">
               {bookmarks.map((bookmark, index) => (
-                <Tile key={index} bookmark={bookmark} />
+                <Tile
+                  key={index}
+                  bookmark={bookmark}
+                  handleRemove={handleRemove}
+                />
               ))}
             </div>
           </div>
         )}
       </div>
+      <ToastContainer />
     </div>
   );
 };

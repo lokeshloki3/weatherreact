@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../MyContext";
 import { Link, useNavigate } from "react-router-dom";
+// import cross from "../assets/cross.png";
 
-const Tile = ({ bookmark }) => {
+const Tile = ({ bookmark, handleRemove }) => {
   const navigate = useNavigate();
   const [weatherData, setWeatherData] = useState(null);
   const { setText, setLatitude, setLongitude, setCountry } =
@@ -18,17 +19,17 @@ const Tile = ({ bookmark }) => {
           throw new Error("Failed to fetch weather data");
         }
         const data = await response.json();
-        // console.log(data);
         setWeatherData(data);
       } catch (err) {
         console.error(err.message);
+        alert("Failed to fetch weather data");
       }
     };
 
     fetchWeatherData();
-  }, []);
+  }, [bookmark.latitude, bookmark.longitude]);
 
-  const handleBookmarkClick = (bookmark) => {
+  const handleBookmarkClick = () => {
     setText(bookmark.city);
     setCountry(bookmark.country);
     setLatitude(bookmark.latitude);
@@ -37,26 +38,31 @@ const Tile = ({ bookmark }) => {
   };
 
   return (
-    <div>
-      <div className="cursor-pointer mb-4 pt-2 pb-2 pl-1 pr-1 md:p-2 border border-blue-200 rounded-xl">
+    <div className="mb-4 pt-2 pb-2 pl-1 pr-1 md:p-2 border border-blue-200 rounded-xl bg-white">
+      <div className="relative">
         <Link
           to="/cities"
           className="text-blue-500 hover:underline"
-          onClick={() => handleBookmarkClick(bookmark)}
+          onClick={handleBookmarkClick}
         >
-          <h3 className="text-lg font-semibold">
+          <h3 className="text-base md:text-lg font-semibold mx-auto cursor-pointer">
             {bookmark.city}, {bookmark.country}
           </h3>
         </Link>
-        <div>{weatherData?.current.temperature_2m}</div>
-        <button
-          onClick={() =>
-            handleRemoveBookmark(bookmark.latitude, bookmark.longitude)
-          }
-          className="text-red-500 hover:text-red-700 hover:underline"
+        <div
+          className="text-red-500 font-bold cursor-pointer absolute top-0 right-1 pl-2"
+          onClick={() => handleRemove(bookmark)}
         >
-          Remove Bookmark
-        </button>
+          X
+        </div>
+      </div>
+      <div className="flex flex-col">
+        <div className="text-sm md:text-base font-semibold">
+          Temp: {weatherData?.current.temperature_2m} °C
+        </div>
+        <div className="text-sm md:text-base font-semibold">
+          Day: {weatherData?.current.is_day === 1 ? "Yes" : "No"}
+        </div>
       </div>
     </div>
   );
