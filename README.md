@@ -1,5 +1,7 @@
 Created Weather Now App -
 
+Demo - https://lokeshloki3.github.io/weatherreact/
+
 Features -
 1) Allows users to search for a city as each character is entered in the input field.
 2) Retrieves the latitude and longitude of the city by selecting it through an API call.
