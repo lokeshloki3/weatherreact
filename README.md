@@ -20,21 +20,7 @@ cd projname
 npm install
 npm run dev
 
-Tailwind CSS -
-npm install -D tailwindcss postcss autoprefixer
-npx tailwindcss init
-add in tailwind.config.js -
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx,vue}",
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-};
+
 
 add in index.css -
 @tailwind base;
