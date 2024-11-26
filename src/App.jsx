@@ -8,7 +8,11 @@ const App = () => {
     <MyContextProvider>
       <div>
         <Routes>
-   
+          <Route path="/" element={<Weather />} />
+          <Route path="/weatherreact" element={<Weather />} />
+          <Route path="/cities" element={<Cities />} />
+        </Routes>
+      </div>
     </MyContextProvider>
   );
 };
