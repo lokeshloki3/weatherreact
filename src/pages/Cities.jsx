@@ -135,7 +135,9 @@ const Cities = () => {
         ) : (
           <>
             {loading ? (
-
+              <div className="fixed inset-0 flex justify-center items-center bg-slate-200 bg-opacity-50 z-50">
+                <img src={loadingGif} alt="Loading..." className="w-16 h-16" />
+              </div>
             ) : (
               <>
                 {weatherData && weatherData.current && (
